@@ -1,0 +1,74 @@
+@import './../../../scss/variables';
+@import './../../../scss/colors';
+
+.center {
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, 10%);
+  width: 40%;
+  height: 390px;
+  z-index: 901;
+}
+
+.error {
+  background-color: $light !important;
+  border: 1px solid rgba($error, 0.75);
+  color: $error;
+  box-shadow: 1px 2px 4px rgba($error, 0.5);
+}
+
+.error-title {
+  font-size: 1.2em;
+  padding:4px;
+  background-color: $error;
+  color: $white;
+  border-bottom: 1px solid $error;
+}
+
+.error-message {
+  color: $gold;
+  font-size: 1em;
+  padding: 4px;
+}
+
+.error-detail {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: $gray;
+  padding: 4px;
+  height: 278px;
+  flex-grow: 1;
+  background-color: $light;
+  outline: none;
+  border: 0;
+  overflow:scroll;
+  width: 95%;
+  margin: auto;
+  margin-top: 5px;
+  border: 1px dashed rgba($error, 0.25);
+}
+
+.close-button {
+  position:absolute;
+  left: calc(100% - 20px);
+  top: 5px;
+  width:20px;
+  height:20px;
+  color: $white;
+  cursor:pointer;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px 0 10px;
+}
+
+.button {
+  margin-top:10px;
+  background-color: $light;
+  border: 1px solid $gray;
+  color: $gray;
+}

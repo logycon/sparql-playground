@@ -1,0 +1,6 @@
+export enum AppRoute {
+  HOME = ''
+}
+
+
+

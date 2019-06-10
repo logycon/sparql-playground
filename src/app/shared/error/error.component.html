@@ -1,0 +1,14 @@
+<ng-container *ngIf="visible">
+  <div class="center error">
+    <div class="error-title">{{error.name}} {{action}}</div>
+    <div class="error-message">{{error.message}}</div>
+    <pre class="error-detail">
+      {{getErrorDetail()}}
+    </pre>
+    <div class="buttons">
+      <button class="button" (click)="copy()">COPY TO CLIPBOARD</button>
+      <button class="button" (click)="hide()">CLOSE</button>
+    </div>
+    <div (click)="hide()" class="close-button">X</div>
+  </div>
+</ng-container>

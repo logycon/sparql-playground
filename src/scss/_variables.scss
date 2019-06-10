@@ -1,0 +1,5 @@
+
+$header-height: 60px;
+$footer-height: 20px;
+
+$tab-height: calc(100% - #{$header-height} - #{$footer-height});

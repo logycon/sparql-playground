@@ -1,0 +1,11 @@
+@import "../../../scss/colors";
+@import "../../../scss/variables";
+
+.footer {
+  height: $footer-height;
+  bottom: 0px;
+  left: 0px;
+  vertical-align: middle;
+  border-top: 2px solid rgba($light, 1);
+
+}

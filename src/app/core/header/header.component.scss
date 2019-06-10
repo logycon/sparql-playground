@@ -1,0 +1,90 @@
+@import "../../../scss/variables";
+@import "../../../scss/colors";
+
+.header {
+  min-height: $header-height;
+  background-color: $very-dark;
+}
+
+.spacer {
+  height: 30px;
+}
+
+.tabs {
+  height: 40px;
+  overflow: hidden;
+  display:flex;
+  padding-left: 10px;
+}
+
+.tab {
+  display:flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 43px;
+  margin-right: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  flex: 0 0 auto;
+  padding: 9px 10px 10px;
+  border-radius: 2px;
+  border-bottom: 2px solid rgb(23, 43, 58);
+  background: $light;
+  color: $gray;
+}
+
+.tab.active {
+  color: $white !important;
+}
+
+.tab-icon {
+  height: 22px;
+  width: 22px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 2px;
+  background: rgb(42, 126, 210);
+}
+
+.tab-close {
+  position: relative;
+  display: flex;
+  margin-left: 10px;
+  top: 1px;
+  height: 13px;
+  width: 13px;
+  opacity: 1;
+
+  svg {
+    stroke: rgb(74, 85, 95);
+  }
+
+}
+
+.tab-new {
+  box-sizing: border-box;
+  display: flex;
+  visibility: visible;
+  height: 43px;
+  width: 43px;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 2px;
+  border-bottom: 2px solid rgb(23, 43, 58);
+  background: $light;
+
+  svg {
+    stroke: rgb(74, 85, 95);
+  }
+}
+

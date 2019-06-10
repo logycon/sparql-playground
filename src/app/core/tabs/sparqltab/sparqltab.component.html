@@ -1,0 +1,48 @@
+<ng-container *ngIf="activeTab">
+  <div class="toolbar">
+    <button *ngIf="false" class="button">btn</button>
+    <div class="toolbar-input">
+      <input class="input" [(ngModel)]="activeTab.endpoint" placeholder="Enter SPARQL Endpoint">
+    </div>
+  </div>
+
+  <div class="tab">
+    <as-split #split class="split" direction="horizontal">
+      <as-split-area class="left" size="40" #leftpane>
+
+        <as-split #leftsplit direction="vertical">
+          <as-split-area size="50" #lefttoppane>
+            <textarea class="scrollable" #query></textarea>
+          </as-split-area>
+
+          <as-split-area size="50" #leftbottom>
+            <div class="query-history">
+              <div class="query-history-item" *ngFor="let query of activeTab.history">
+                <div class="query-history-item-status"
+                  [ngClass]="{'success': !query.queryError, 'error' : query.queryError}">
+                </div>
+                <div class="query-history-item-query"> {{query.query}}</div>
+              </div>
+            </div>
+          </as-split-area>
+        </as-split>
+      </as-split-area>
+
+      <as-split-area class="right" size="60">
+        <app-error *ngIf="activeTab.queryError" [error]="activeTab.queryError"></app-error>
+        <div class="results">
+          <div class="scrollable resultView" [hidden]="!activeTab.queryResult">
+            <textarea class="scrollable" #results></textarea>
+          </div>
+        </div>
+      </as-split-area>
+    </as-split>
+  </div>
+
+  <div *ngIf="leftPane" class="execute-div" [style.left.px]="leftPane.nativeElement.offsetWidth - 53.5" #executeBtn>
+    <div title="Execute Query (Ctrl-Enter)" class="execute-button" (click)="execute()">
+      <svg width="35" height="35" viewBox="3.5,4.5,24,24">
+        <path d="M 11 9 L 24 16 L 11 23 z"></path>
+      </svg></div>
+  </div>
+</ng-container>
