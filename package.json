@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "deploy" : "ng build --configuration gh-pages --base-href /sparql-playground-app --deploy-url /sparql-playground-app/ && node publish-ghpages.js",
-    "publish": "node publish-ghpages.ts",
+    "publish": "node publish-ghpages.js",
     "e2e": "ng e2e"
   },
   "private": true,
