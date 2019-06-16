@@ -24,6 +24,7 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/fold/indent-fold';
+import { LocalStorageService } from './services/localstorage.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import 'codemirror/addon/fold/indent-fold';
     SharedModule,
     CoreModule,
   ],
-  providers: [SparqlService],
+  providers: [SparqlService, LocalStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

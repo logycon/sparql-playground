@@ -35,11 +35,12 @@ export class SparqlTab extends Tab {
   public queryError: any;
   public history: QueryHistory[];
 
-  public constructor(title?: string) {
+  public constructor() {
     super();
-    this.title = title || 'SPARQL';
-    this.query = 'select * where { ?s a owl:Ontology. }';
+    this.query = '#wikipedia\nselect * where { ?s a owl:Ontology. }';
     this.endpoint = 'https://query.wikidata.org/sparql';
+    const title = this.query.split('\n')[0];
+    this.title = title.substr(1, title.length);
     this.queryResult = null;
     this.queryResultStr = '';
     this.history = [];

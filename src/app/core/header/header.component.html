@@ -5,7 +5,9 @@
     <div class="tabs" *ngIf="{ tabs: (tabs$ | async), activeTab: (activeTab$ | async) } as data">
       <div class="tab" (click)="setActive(tab)" [ngClass]="{ 'active': data.activeTab?.id === tab.id }" *ngFor="let tab of data.tabs">
         <div class="tab-icon">Q</div>
-        <div class="tab-text">{{tab.title}}</div>
+        <div class="tab-text">
+          {{tab.title}}
+        </div>
         <div *ngIf="data.tabs.length > 1" class="tab-close" (click)="removeTab(tab)">
           <svg
             width="12" height="11"

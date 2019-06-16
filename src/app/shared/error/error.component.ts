@@ -8,15 +8,15 @@ import { BrowserUtils } from 'src/app/models/utils';
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent {
-  private err: Error;
+  private err: any;
 
   @Input()
-  set error(val: Error) {
+  set error(val: any) {
     this.visible = true;
     this.err = val;
     BrowserUtils.addBackdrop();
   }
-  get error(): Error {
+  get error(): any {
     return this.err;
   }
 
@@ -30,7 +30,7 @@ export class ErrorComponent {
 
   public getErrorDetail() {
     if (this.error instanceof HttpErrorResponse) {
-      return `${this.error.error}`;
+      return `${this.error.error.message}`;
     }
     return '';
   }

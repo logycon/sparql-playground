@@ -22,7 +22,7 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
     }
 
     case TabsActionTypes.AddTab: {
-      const tab = new SparqlTab(`SPARQL ${state.ids.length + 1}`);
+      const tab = new SparqlTab();
       return tabsAdapter.addOne(
         tab,
         {
@@ -33,6 +33,10 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
       );
     }
 
+    case TabsActionTypes.LoadTabs: {
+      return tabsAdapter.addMany(action.tabs, { ...state, loading: false, activeTab: action.tabs[0]});
+    }
+
     case TabsActionTypes.SetActiveTab: {
       return {
         ...state,
@@ -41,16 +45,19 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
     }
 
     case TabsActionTypes.RemoveTab: {
-      const tabIndex: number = (state.ids as Array<string>).indexOf(action.tab.id);
-      let newActiveTab = null;
-      if (tabIndex === 0) {
-        newActiveTab =  state.entities[state.ids[1]];
+      const removeIndex = (state.ids as Array<string>).indexOf(action.tab.id);
+      const removeTab = state.entities[action.tab.id];
+      const currentActiveTab = state.activeTab;
+      let newActiveTab;
+      if (removeTab.id === currentActiveTab.id) {
+        const newActiveIndex = removeIndex === 0 ? removeIndex : removeIndex - 1;
+        newActiveTab = state.entities[state.ids[newActiveIndex]];
       } else {
-        newActiveTab = state.entities[state.ids[0]];
+        newActiveTab = currentActiveTab;
       }
 
       return tabsAdapter.removeOne(
-        action.tab.id,
+        removeTab.id,
         {
           ...state,
           activeTab: newActiveTab
@@ -84,6 +91,7 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
       );
     }
 
+    case TabsActionTypes.SaveToLocalStorage:
     case TabsActionTypes.LogHistory: {
       return {
         ...state

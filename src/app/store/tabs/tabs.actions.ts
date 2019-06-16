@@ -4,12 +4,14 @@ import { SparqlTab } from 'src/app/models/tabs';
 export enum TabsActionTypes {
   InitTabs = '[TABS] Init',
   AddTab = '[TABS] Add Tab',
+  LoadTabs = '[TABS] Load Tabs',
   SetActiveTab = '[TABS] Set Active Tab',
   RemoveTab = '[TABS] Remove Tab',
   ExecuteQuery = '[TABS] Execute Query',
   LogHistory = '[TABS] Log History',
   UpdateTab = '[TABS] Update Tab',
-  SaveTab = '[TABS] Save Tab'
+  SaveTab = '[TABS] Save Tab',
+  SaveToLocalStorage = '[TABS] Save to Local Storage'
 }
 
 export class InitTabs implements Action {
@@ -18,6 +20,11 @@ export class InitTabs implements Action {
 
 export class AddTab implements Action {
   readonly type = TabsActionTypes.AddTab;
+}
+
+export class LoadTabs implements Action {
+  readonly type = TabsActionTypes.LoadTabs;
+  constructor(public tabs: SparqlTab[]) {}
 }
 
 export class SetActiveTab implements Action {
@@ -50,6 +57,12 @@ export class SaveTab implements Action {
   constructor(public tab: SparqlTab) {}
 }
 
-export type TabsActions = InitTabs | AddTab | SetActiveTab | RemoveTab |
-  ExecuteQuery | UpdateTab | LogHistory | SaveTab
+export class SaveToLocalStorage implements Action {
+  readonly type = TabsActionTypes.SaveToLocalStorage;
+  constructor() {}
+}
+
+export type TabsActions = InitTabs | AddTab | LoadTabs | SetActiveTab | RemoveTab |
+  ExecuteQuery | UpdateTab | LogHistory | SaveTab |
+  SaveToLocalStorage
 ;
