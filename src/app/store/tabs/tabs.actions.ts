@@ -11,7 +11,8 @@ export enum TabsActionTypes {
   LogHistory = '[TABS] Log History',
   UpdateTab = '[TABS] Update Tab',
   SaveTab = '[TABS] Save Tab',
-  SaveToLocalStorage = '[TABS] Save to Local Storage'
+  SaveToLocalStorage = '[TABS] Save to Local Storage',
+  DuplicateTab = '[TABS] Duplicate Tab'
 }
 
 export class InitTabs implements Action {
@@ -62,7 +63,12 @@ export class SaveToLocalStorage implements Action {
   constructor() {}
 }
 
+export class DuplicateTab implements Action {
+  readonly type = TabsActionTypes.DuplicateTab;
+  constructor(public tab: SparqlTab) {}
+}
+
 export type TabsActions = InitTabs | AddTab | LoadTabs | SetActiveTab | RemoveTab |
   ExecuteQuery | UpdateTab | LogHistory | SaveTab |
-  SaveToLocalStorage
+  SaveToLocalStorage | DuplicateTab
 ;

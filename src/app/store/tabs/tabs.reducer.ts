@@ -34,7 +34,7 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
     }
 
     case TabsActionTypes.LoadTabs: {
-      return tabsAdapter.addMany(action.tabs, { ...state, loading: false, activeTab: action.tabs[0]});
+      return tabsAdapter.addMany(action.tabs, { ...state, loading: false, activeTab: action.tabs[0] });
     }
 
     case TabsActionTypes.SetActiveTab: {
@@ -44,6 +44,11 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
       };
     }
 
+    case TabsActionTypes.DuplicateTab: {
+      const newTab = SparqlTab.duplicate(action.tab);
+      return tabsAdapter.upsertOne(newTab, { ...state, activeTab: newTab });
+    }
+
     case TabsActionTypes.RemoveTab: {
       const removeIndex = (state.ids as Array<string>).indexOf(action.tab.id);
       const removeTab = state.entities[action.tab.id];
@@ -51,7 +56,7 @@ export function reducer(state = initialTabsState, action: TabsActions): TabsStat
       let newActiveTab;
       if (removeTab.id === currentActiveTab.id) {
         const newActiveIndex = removeIndex === 0 ? removeIndex : removeIndex - 1;
-        newActiveTab = state.entities[state.ids[newActiveIndex]];
+        newActiveTab = { ...state.entities[state.ids[newActiveIndex]] };
       } else {
         newActiveTab = currentActiveTab;
       }

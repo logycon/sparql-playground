@@ -3,11 +3,11 @@ import { Actions, ofType, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { InitTabs, TabsActionTypes, AddTab,
-  ExecuteQuery, UpdateTab, SaveToLocalStorage, RemoveTab, LoadTabs
+  ExecuteQuery, UpdateTab, SaveToLocalStorage, RemoveTab, LoadTabs, DuplicateTab
 } from './tabs.actions';
 import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { SparqlService } from 'src/app/services/sparql.service';
-import { of, EMPTY } from 'rxjs';
+import { of } from 'rxjs';
 import { QueryHistory } from 'src/app/models/tabs';
 import { LocalStorageService } from 'src/app/services/localstorage.service';
 
@@ -20,7 +20,6 @@ export class TabsEffects {
     private sparqlService: SparqlService,
     private localStorageService: LocalStorageService
   ) {}
-
 
   @Effect()
   initTabs$ = this.actions$.pipe(
@@ -78,6 +77,12 @@ export class TabsEffects {
   @Effect()
   addTab$ = this.actions$.pipe(
     ofType<AddTab>(TabsActionTypes.AddTab),
+    map(() => new SaveToLocalStorage())
+  );
+
+  @Effect()
+  duplicateTab$ = this.actions$.pipe(
+    ofType<DuplicateTab>(TabsActionTypes.DuplicateTab),
     map(() => new SaveToLocalStorage())
   );
 

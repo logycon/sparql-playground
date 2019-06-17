@@ -46,5 +46,13 @@ export class SparqlTab extends Tab {
     this.history = [];
   }
 
+  public static duplicate(tab: SparqlTab): SparqlTab {
+    const newTab: SparqlTab = {...tab};
+    newTab.id = Guid.newGuid();
+    newTab.queryResult = null;
+    newTab.queryResultStr = '';
+    return newTab;
+  }
+
 }
 

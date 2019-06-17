@@ -30,7 +30,7 @@ export class ErrorComponent {
 
   public getErrorDetail() {
     if (this.error instanceof HttpErrorResponse) {
-      return `${this.error.error.message}`;
+      return `${this.error.error.message || this.error.message}`;
     }
     return '';
   }

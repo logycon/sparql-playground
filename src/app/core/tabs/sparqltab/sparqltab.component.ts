@@ -66,7 +66,6 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
         this.initCodeMirror();
         if (this.activeTab) {
           this.activeTab.query = this.queryEditor.getValue();
-          this.store.dispatch(new SaveTab(this.activeTab));
         }
         this.activeTab = tab;
         this.changeDetector.detectChanges();
