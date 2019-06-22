@@ -20,7 +20,7 @@ export class WarningComponent implements OnInit {
   @Output()
   close = new EventEmitter<boolean>();
 
-  private visible: boolean;
+  public visible: boolean;
 
   constructor() {
     this.visible = true;
