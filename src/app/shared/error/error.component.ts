@@ -42,7 +42,7 @@ export class ErrorComponent {
   }
 
   copy() {
-    if (BrowserUtils.copyToCliboard(this.getErrorDetail())) {
+    if (BrowserUtils.copyToClipboard(this.getErrorDetail())) {
       this.action = '(COPIED)';
     } else {
       this.action = '(COPY FAILED)';
