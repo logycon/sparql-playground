@@ -1,0 +1,59 @@
+@import './../../../scss/variables';
+@import './../../../scss/colors';
+
+.center {
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, 10%);
+  width: 40%;
+  z-index: 901;
+}
+
+.warning {
+  background-color: $light !important;
+  border: 1px solid rgba($warning, 0.75);
+  color: $warning;
+  box-shadow: 1px 2px 4px rgba($error, 0.5);
+}
+
+.warning-title {
+  font-size: 1.2em;
+  padding:4px;
+  background-color: $warning;
+  color: $black;
+  border-bottom: 1px solid $warning;
+}
+
+.warning-message {
+  color: $gold;
+  font-size: 1.2em;
+  padding: 2em 1em 1em 2em;
+}
+
+.close-button {
+  position:absolute;
+  left: calc(100% - 20px);
+  top: 5px;
+  width:20px;
+  height:20px;
+  color: $black;
+  cursor:pointer;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px 10px 10px;
+
+}
+
+.button {
+  margin-top:10px;
+  background-color: $light;
+  border: 1px solid $gray;
+  font-size: 1em;
+  color: $gray;
+}
+

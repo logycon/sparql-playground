@@ -8,6 +8,7 @@ import { getActiveTab } from 'src/app/store/tabs/tabs.selectors';
 import { takeUntil } from 'rxjs/operators';
 import { ExecuteQuery, UpdateTab, SaveTab } from 'src/app/store/tabs/tabs.actions';
 import * as CodeMirror from 'codemirror';
+import {Warning} from '../../../models/misc';
 
 @Component({
   selector: 'app-sparql',
@@ -16,8 +17,6 @@ import * as CodeMirror from 'codemirror';
 })
 export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsub$: Subject<void> = new Subject<void>();
-
-  public content: string;
 
   @ViewChild('split')
   public split: SplitComponent;
@@ -35,6 +34,7 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   activeTab$: Observable<SparqlTab>;
   activeTab: SparqlTab;
+  warning: Warning;
 
   queryEditorOptions = {
     lineNumbers: true,
@@ -106,8 +106,26 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   execute() {
+    const sql = this.queryEditor.getValue();
+    if (sql.toLowerCase().includes('select') && !sql.toLowerCase().includes('limit')) {
+      this.warning = {
+        title: 'Selecting without Limit',
+        message: 'Selecting without limit is not recommended. Are you sure to proceed?'
+      };
+    } else {
+      this.executeQuery();
+    }
+  }
+
+  private executeQuery() {
     this.activeTab.query = this.queryEditor.getValue();
     this.store.dispatch(new ExecuteQuery(this.activeTab));
+  }
+
+  warned(proceed: boolean) {
+    if (proceed) {
+      this.executeQuery();
+    }
   }
 
 }
