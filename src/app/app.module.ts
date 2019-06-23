@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { SparqlService } from './services/sparql.service';
+import { LocalStorageService } from './services/localstorage.service';
 
 import 'codemirror/mode/sparql/sparql';
 import 'codemirror/mode/javascript/javascript';
@@ -24,7 +25,7 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/fold/indent-fold';
-import { LocalStorageService } from './services/localstorage.service';
+import 'codemirror/addon/format/formatting';
 
 @NgModule({
   declarations: [

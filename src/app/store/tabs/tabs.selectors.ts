@@ -6,7 +6,7 @@ export const {
   selectAll: getTabs,
   selectEntities: getTabsEntities,
   selectTotal: getTabsTotal
-} = tabsAdapter.getSelectors(getState)
+} = tabsAdapter.getSelectors(getState);
 
 export const getTabsLoading = createSelector(
   getState,

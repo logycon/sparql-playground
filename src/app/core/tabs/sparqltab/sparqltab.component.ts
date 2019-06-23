@@ -1,3 +1,4 @@
+/* tslint:disable:no-string-literal */
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SplitComponent } from 'angular-split';
 import { AppState } from 'src/app/store/reducers';
@@ -105,7 +106,14 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  formatQuery() {
+    CodeMirror.commands['selectAll'](this.queryEditor);
+    const range = { from: this.queryEditor.getCursor(true), to: this.queryEditor.getCursor(false)};
+    this.queryEditor.autoFormatRange(range.from, range.to);
+  }
+
   execute() {
+    this.formatQuery();
     const sql = this.queryEditor.getValue();
     if (sql.toLowerCase().includes('select') && !sql.toLowerCase().includes('limit')) {
       this.warning = {
