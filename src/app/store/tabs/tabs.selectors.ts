@@ -2,6 +2,7 @@ import { TabsState, tabsAdapter } from './tabs.reducer';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export const getState = createFeatureSelector<TabsState>('tabs');
+
 export const {
   selectAll: getTabs,
   selectEntities: getTabsEntities,

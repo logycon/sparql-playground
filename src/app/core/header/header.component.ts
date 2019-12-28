@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { AppState } from 'src/app/store/reducers';
+import { AppState } from 'src/app/store/store';
 import { Observable } from 'rxjs';
 import { SparqlTab } from 'src/app/models/tabs';
 import { getTabs, getActiveTab } from 'src/app/store/tabs/tabs.selectors';
-import { AddTab, SetActiveTab, RemoveTab, DuplicateTab } from 'src/app/store/tabs/tabs.actions';
+import * as TabsActions from 'src/app/store/tabs/tabs.actions';
 
 @Component({
   selector: 'app-header',
@@ -22,18 +22,18 @@ export class HeaderComponent {
   }
 
   newTab() {
-    this.store.dispatch(new AddTab());
+    this.store.dispatch(TabsActions.AddTab());
   }
 
   setActive(tab: SparqlTab) {
-    this.store.dispatch(new SetActiveTab(tab));
+    this.store.dispatch(TabsActions.SetActiveTab({tab}));
   }
 
   removeTab(tab: SparqlTab) {
-    this.store.dispatch(new RemoveTab(tab));
+    this.store.dispatch(TabsActions.RemoveTab({tab}));
   }
 
   duplicateTab(tab: SparqlTab) {
-    this.store.dispatch(new DuplicateTab(tab));
+    this.store.dispatch(TabsActions.DuplicateTab({tab}));
   }
 }
