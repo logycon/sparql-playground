@@ -7,9 +7,10 @@ import { Observable, Subject } from 'rxjs';
 import { SparqlTab } from 'src/app/models/tabs';
 import { getActiveTab } from 'src/app/store/tabs/tabs.selectors';
 import { takeUntil } from 'rxjs/operators';
-import { ExecuteQuery, UpdateTab, SaveTab } from 'src/app/store/tabs/tabs.actions';
+import { ExecuteQuery } from 'src/app/store/tabs/tabs.actions';
+import { Warning } from '../../../models/misc';
+
 import * as CodeMirror from 'codemirror';
-import {Warning} from '../../../models/misc';
 
 @Component({
   selector: 'app-sparql',
@@ -40,7 +41,8 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
   queryEditorOptions = {
     lineNumbers: true,
     theme: 'material',
-    mode: 'sparql',
+    mode: 'application/sparql-query',
+    matchBrackets: true,
     foldGutter: true,
     extraKeys: {'Ctrl-Q' : (cm) => { console.log(cm); cm.foldCode(cm.getCursor()); }},
     gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
