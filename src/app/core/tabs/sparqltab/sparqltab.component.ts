@@ -20,17 +20,17 @@ import * as CodeMirror from 'codemirror';
 export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsub$: Subject<void> = new Subject<void>();
 
-  @ViewChild('split')
+  @ViewChild('split', { static: false })
   public split: SplitComponent;
 
-  @ViewChild('leftpane')
+  @ViewChild('leftpane', { static: false })
   public leftPane: ElementRef;
 
-  @ViewChild('results')
+  @ViewChild('results', { static: false })
   public results: ElementRef;
   private resultsEditor: any;
 
-  @ViewChild('query')
+  @ViewChild('query', { static: false })
   public query: ElementRef;
   private queryEditor: any;
 
