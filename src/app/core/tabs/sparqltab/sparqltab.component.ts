@@ -1,13 +1,13 @@
 /* tslint:disable:no-string-literal */
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SplitComponent } from 'angular-split';
-import { AppState } from 'src/app/store/reducers';
+import { AppState } from 'src/app/store/store';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { SparqlTab } from 'src/app/models/tabs';
 import { getActiveTab } from 'src/app/store/tabs/tabs.selectors';
 import { takeUntil } from 'rxjs/operators';
-import { ExecuteQuery } from 'src/app/store/tabs/tabs.actions';
+import * as TabsActions from 'src/app/store/tabs/tabs.actions';
 import { Warning } from '../../../models/misc';
 
 import * as CodeMirror from 'codemirror';
@@ -129,7 +129,7 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private executeQuery() {
     this.activeTab.query = this.queryEditor.getValue();
-    this.store.dispatch(new ExecuteQuery(this.activeTab));
+    this.store.dispatch(TabsActions.ExecuteQuery({tab: this.activeTab}));
   }
 
   warned(proceed: boolean) {

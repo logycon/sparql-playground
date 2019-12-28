@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { reducers, metaReducers, AppEffects } from './store/reducers';
+import { AppReducers, AppEffects } from './store/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AngularSplitModule } from 'angular-split';
 import { environment } from '../environments/environment';
@@ -35,7 +35,7 @@ import 'codemirror/addon/format/formatting';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(AppReducers),
     EffectsModule.forRoot(AppEffects),
     AngularSplitModule.forRoot(),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
