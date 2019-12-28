@@ -8,15 +8,15 @@ import { BrowserUtils } from 'src/app/models/utils';
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent {
-  private err: Error;
+  private err: any;
 
   @Input()
-  set error(val: Error) {
+  set error(val: any) {
     this.visible = true;
     this.err = val;
     BrowserUtils.addBackdrop();
   }
-  get error(): Error {
+  get error(): any {
     return this.err;
   }
 
@@ -29,8 +29,9 @@ export class ErrorComponent {
   }
 
   public getErrorDetail() {
+    console.log(this.error);
     if (this.error instanceof HttpErrorResponse) {
-      return `${this.error.error}`;
+      return `${this.error.error.message || this.error.message}`;
     }
     return '';
   }
@@ -41,7 +42,7 @@ export class ErrorComponent {
   }
 
   copy() {
-    if (BrowserUtils.copyToCliboard(this.getErrorDetail())) {
+    if (BrowserUtils.copyToClipboard(this.getErrorDetail())) {
       this.action = '(COPIED)';
     } else {
       this.action = '(COPY FAILED)';

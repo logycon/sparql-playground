@@ -1,12 +1,15 @@
+/* tslint:disable:no-string-literal */
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SplitComponent } from 'angular-split';
-import { AppState } from 'src/app/store/reducers';
+import { AppState } from 'src/app/store/store';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { SparqlTab } from 'src/app/models/tabs';
 import { getActiveTab } from 'src/app/store/tabs/tabs.selectors';
 import { takeUntil } from 'rxjs/operators';
-import { ExecuteQuery, UpdateTab, SaveTab } from 'src/app/store/tabs/tabs.actions';
+import * as TabsActions from 'src/app/store/tabs/tabs.actions';
+import { Warning } from '../../../models/misc';
+
 import * as CodeMirror from 'codemirror';
 
 @Component({
@@ -17,29 +20,29 @@ import * as CodeMirror from 'codemirror';
 export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsub$: Subject<void> = new Subject<void>();
 
-  public content: string;
-
-  @ViewChild('split')
+  @ViewChild('split', { static: false })
   public split: SplitComponent;
 
-  @ViewChild('leftpane')
+  @ViewChild('leftpane', { static: false })
   public leftPane: ElementRef;
 
-  @ViewChild('results')
+  @ViewChild('results', { static: false })
   public results: ElementRef;
   private resultsEditor: any;
 
-  @ViewChild('query')
+  @ViewChild('query', { static: false })
   public query: ElementRef;
   private queryEditor: any;
 
   activeTab$: Observable<SparqlTab>;
   activeTab: SparqlTab;
+  warning: Warning;
 
   queryEditorOptions = {
     lineNumbers: true,
     theme: 'material',
-    mode: 'sparql',
+    mode: 'application/sparql-query',
+    matchBrackets: true,
     foldGutter: true,
     extraKeys: {'Ctrl-Q' : (cm) => { console.log(cm); cm.foldCode(cm.getCursor()); }},
     gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
@@ -66,7 +69,6 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
         this.initCodeMirror();
         if (this.activeTab) {
           this.activeTab.query = this.queryEditor.getValue();
-          this.store.dispatch(new SaveTab(this.activeTab));
         }
         this.activeTab = tab;
         this.changeDetector.detectChanges();
@@ -106,9 +108,34 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  formatQuery() {
+    CodeMirror.commands['selectAll'](this.queryEditor);
+    const range = { from: this.queryEditor.getCursor(true), to: this.queryEditor.getCursor(false)};
+    this.queryEditor.autoFormatRange(range.from, range.to);
+  }
+
   execute() {
+    this.formatQuery();
+    const sql = this.queryEditor.getValue();
+    if (sql.toLowerCase().includes('select') && !sql.toLowerCase().includes('limit')) {
+      this.warning = {
+        title: 'Selecting without Limit',
+        message: 'Selecting without limit is not recommended. Are you sure to proceed?'
+      };
+    } else {
+      this.executeQuery();
+    }
+  }
+
+  private executeQuery() {
     this.activeTab.query = this.queryEditor.getValue();
-    this.store.dispatch(new ExecuteQuery(this.activeTab));
+    this.store.dispatch(TabsActions.ExecuteQuery({tab: this.activeTab}));
+  }
+
+  warned(proceed: boolean) {
+    if (proceed) {
+      this.executeQuery();
+    }
   }
 
 }

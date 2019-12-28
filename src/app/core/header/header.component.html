@@ -3,19 +3,34 @@
     <div class="spacer">
     </div>
     <div class="tabs" *ngIf="{ tabs: (tabs$ | async), activeTab: (activeTab$ | async) } as data">
-      <div class="tab" (click)="setActive(tab)" [ngClass]="{ 'active': data.activeTab?.id === tab.id }" *ngFor="let tab of data.tabs">
+      <div class="tab" (click)="setActive(tab)" [ngClass]="{ 'active': data.activeTab?.id === tab.id }"
+        *ngFor="let tab of data.tabs">
         <div class="tab-icon">Q</div>
-        <div class="tab-text">{{tab.title}}</div>
+        <div class="tab-text">
+          {{tab.title}}
+        </div>
+        <div class="tab-duplicate" (click)="duplicateTab(tab)">
+          <svg width="34" height="34" stroke-width="4" viewBox="0 0 50 50">
+            <title>Duplicate tab</title>
+            <line x1="25" y1="13.1" x2="25" y2="36.9"></line>
+            <line x1="36.9" y1="25" x2="13.1" y2="25"></line>
+          </svg>
+        </div>
         <div *ngIf="data.tabs.length > 1" class="tab-close" (click)="removeTab(tab)">
-          <svg
-            width="12" height="11"
-            stroke-width="7"
-            viewBox="0 0 50 50"><title>Close Tab</title><line x1="4" y1="4" x2="46" y2="46"></line><line x1="46" y1="4" x2="4" y2="46"></line></svg>
+          <svg width="12" height="11" stroke-width="7" viewBox="0 0 50 50">
+            <title>Close Tab</title>
+            <line x1="4" y1="4" x2="46" y2="46"></line>
+            <line x1="46" y1="4" x2="4" y2="46"></line>
+          </svg>
         </div>
       </div>
       <div class="tab">
         <div class="tab-new" (click)="newTab()">
-            <svg width="34" height="34" stroke-width="4" viewBox="0 0 50 50"><title>Opens a New Tab</title><line x1="25" y1="13.1" x2="25" y2="36.9"></line><line x1="36.9" y1="25" x2="13.1" y2="25"></line></svg>
+          <svg width="34" height="34" stroke-width="4" viewBox="0 0 50 50">
+            <title>Opens a New Tab</title>
+            <line x1="25" y1="13.1" x2="25" y2="36.9"></line>
+            <line x1="36.9" y1="25" x2="13.1" y2="25"></line>
+          </svg>
         </div>
       </div>
     </div>

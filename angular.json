@@ -30,7 +30,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
             ],
             "scripts": [],
             "es5BrowserSupport": true
@@ -63,7 +63,7 @@
             "gh-pages": {
               "fileReplacements": [
                 { "replace": "src/environments/environment.ts", "with": "src/environments/environment.ghpages.ts" },
-                { "replace": "src/index.html", "with": "src/env/gh-pages/index.html" }
+                { "replace": "src/index.html", "with": "src/environments/ghpages/index.html" }
               ],
               "optimization": true,
               "outputHashing": "all",

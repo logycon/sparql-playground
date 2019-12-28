@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Actions, ofType, Effect } from '@ngrx/effects';
+import { Actions, ofType, Effect, createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { AppState } from '../reducers';
-import { InitTabs, TabsActionTypes, AddTab,
-  ExecuteQuery, UpdateTab, LogHistory
-} from './tabs.actions';
-import { map, mergeMap, catchError } from 'rxjs/operators';
+import { AppState } from '../store';
+import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { SparqlService } from 'src/app/services/sparql.service';
 import { of } from 'rxjs';
 import { QueryHistory } from 'src/app/models/tabs';
+import { LocalStorageService } from 'src/app/services/localstorage.service';
+import * as TabsActions from './tabs.actions';
+
 
 @Injectable()
 export class TabsEffects {
@@ -16,38 +16,83 @@ export class TabsEffects {
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,
-    private service: SparqlService
+    private sparqlService: SparqlService,
+    private localStorageService: LocalStorageService
   ) {}
 
-
-  @Effect()
-  $initTabs = this.actions$.pipe(
-    ofType<InitTabs>(TabsActionTypes.InitTabs),
-    map(() => new AddTab())
+  initTabs$ = createEffect(() => this.actions$.pipe(
+      ofType(TabsActions.InitTabs),
+      map(() => {
+        const tabs = this.localStorageService.loadSparqlTabs();
+        if (tabs.length === 0) {
+          return TabsActions.AddTab();
+        } else {
+          return TabsActions.LoadTabs({ tabs });
+        }
+      })
+    )
   );
 
-  @Effect()
-  $executeQuery = this.actions$.pipe(
-    ofType<ExecuteQuery>(TabsActionTypes.ExecuteQuery),
-    mergeMap((action) => {
-      return this.service.executeSparql(action.tab.endpoint, action.tab.query).pipe(
-        map((res: any) => {
-          action.tab.queryResult = res;
-          action.tab.queryError = null;
-          action.tab.queryResultStr = JSON.stringify(action.tab.queryResult, null, '\t');
-          action.tab.history.unshift(QueryHistory.fromTab(action.tab));
-          return new UpdateTab(action.tab);
-        }),
-        catchError(err => {
-          action.tab.queryResult = null;
-          action.tab.queryError = err;
-          action.tab.queryResultStr = '';
-          action.tab.history.unshift(QueryHistory.fromTab(action.tab));
-          return of(new UpdateTab(action.tab));
-        })
-      );
+  executeQuery$ = createEffect(() => this.actions$.pipe(
+      ofType(TabsActions.ExecuteQuery),
+      mergeMap((action) => {
+        return this.sparqlService.executeSparql(action.tab.endpoint, action.tab.query).pipe(
+          map((res: any) => {
+            if (action.tab.query.startsWith('#')) {
+              const title = action.tab.query.split('\n')[0];
+              action.tab.title = title.substr(1, title.length);
+            }
+
+            action.tab.queryResult = res;
+            action.tab.queryError = null;
+            action.tab.queryResultStr = JSON.stringify(action.tab.queryResult, null, '\t');
+            action.tab.history.unshift(QueryHistory.fromTab(action.tab));
+            return TabsActions.UpdateTab({ tab: action.tab });
+          }),
+          catchError(err => {
+            action.tab.queryResult = null;
+            action.tab.queryError = err;
+            action.tab.queryResultStr = '';
+            action.tab.history.unshift(QueryHistory.fromTab(action.tab));
+            return of(TabsActions.UpdateTab({ tab: action.tab }));
+          })
+        );
+      })
+    )
+  );
+
+  updateTab$ = createEffect(() => this.actions$.pipe(
+    ofType(TabsActions.UpdateTab),
+    map(() => TabsActions.SaveToLocalStorage())
+  ));
+
+  removeTab$ = createEffect(() => this.actions$.pipe(
+    ofType(TabsActions.RemoveTab),
+    map(() => TabsActions.SaveToLocalStorage())
+  ));
+
+  addTab$ = createEffect(() => this.actions$.pipe(
+    ofType(TabsActions.AddTab),
+    map(() => TabsActions.SaveToLocalStorage())
+  ));
+
+  duplicateTab$ = createEffect(() => this.actions$.pipe(
+    ofType(TabsActions.DuplicateTab),
+    map(() => TabsActions.SaveToLocalStorage())
+  ));
+
+  saveToLocalStorage$ = createEffect(() => this.actions$.pipe(
+    ofType(TabsActions.SaveToLocalStorage),
+    withLatestFrom(this.store),
+    map(([action, store]) => {
+      const tabs = [];
+      for (const id of store.tabs.ids) {
+        const tab = store.tabs.entities[id];
+        tabs.push({ id: tab.id, query : tab.query, endpoint: tab.endpoint, title : tab.title, history: tab.history });
+      }
+      this.localStorageService.saveSparqlTabs(tabs);
     })
-  );
+  ), { dispatch: false });
 
 }
 

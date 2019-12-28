@@ -6,13 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { reducers, metaReducers, AppEffects } from './store/reducers';
+import { AppReducers, AppEffects } from './store/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AngularSplitModule } from 'angular-split';
 import { environment } from '../environments/environment';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { SparqlService } from './services/sparql.service';
+import { LocalStorageService } from './services/localstorage.service';
 
 import 'codemirror/mode/sparql/sparql';
 import 'codemirror/mode/javascript/javascript';
@@ -24,6 +25,7 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/fold/indent-fold';
+import 'codemirror/addon/format/formatting';
 
 @NgModule({
   declarations: [
@@ -33,14 +35,14 @@ import 'codemirror/addon/fold/indent-fold';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(AppReducers),
     EffectsModule.forRoot(AppEffects),
     AngularSplitModule.forRoot(),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     SharedModule,
     CoreModule,
   ],
-  providers: [SparqlService],
+  providers: [SparqlService, LocalStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

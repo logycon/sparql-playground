@@ -12,7 +12,7 @@ export class Guid {
 
 export class BrowserUtils {
 
-  static copyToCliboard(text: string): boolean {
+  static copyToClipboard(text: string): boolean {
     const textarea = document.createElement('textarea');
     textarea.textContent = text;
     document.body.appendChild(textarea);

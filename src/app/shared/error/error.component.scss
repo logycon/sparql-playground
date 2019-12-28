@@ -7,6 +7,7 @@
   right: 50%;
   transform: translate(-50%, 10%);
   width: 40%;
+  max-width: 40%;
   height: 390px;
   z-index: 901;
 }
@@ -24,12 +25,20 @@
   background-color: $error;
   color: $white;
   border-bottom: 1px solid $error;
+  max-width: 100%;
+  overflow:hidden;
+  white-space: nowrap;;
+  text-overflow: ellipsis;
 }
 
 .error-message {
   color: $gold;
   font-size: 1em;
   padding: 4px;
+  max-width: 100%;
+  overflow:hidden;
+  white-space: nowrap;;
+  text-overflow: ellipsis;;
 }
 
 .error-detail {

@@ -1,0 +1,11 @@
+<ng-container *ngIf="visible">
+  <div class="center warning">
+    <div class="warning-title">{{warn.title}}</div>
+    <div class="warning-message">{{warn.message}}</div>
+    <div class="buttons">
+      <button class="button" (click)="ok()">OK</button>
+      <button class="button" (click)="cancel()">CANCEL</button>
+    </div>
+    <div (click)="cancel()" class="close-button">X</div>
+  </div>
+</ng-container>

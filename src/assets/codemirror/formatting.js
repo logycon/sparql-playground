@@ -1,4 +1,14 @@
-(function() {
+
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
 
   CodeMirror.extendMode("css", {
     commentStart: "/*",
@@ -46,9 +56,9 @@
         if (startIndex > -1 && endIndex > -1 && endIndex > startIndex) {
           // Take string till comment start
           selText = selText.substr(0, startIndex)
-          // From comment start till comment end
+            // From comment start till comment end
             + selText.substring(startIndex + curMode.commentStart.length, endIndex)
-          // From comment end till string end
+            // From comment end till string end
             + selText.substr(endIndex + curMode.commentEnd.length);
         }
         cm.replaceRange(selText, from, to);
@@ -91,7 +101,7 @@
           atSol = false;
         }
         if (!atSol && inner.mode.newlineAfterToken &&
-            inner.mode.newlineAfterToken(style, cur, stream.string.slice(stream.pos) || text[i+1] || "", inner.state))
+          inner.mode.newlineAfterToken(style, cur, stream.string.slice(stream.pos) || text[i+1] || "", inner.state))
           newline();
       }
       if (!stream.pos && outer.blankLine) outer.blankLine(state);
@@ -105,4 +115,4 @@
       cm.setSelection(from, cm.getCursor(false));
     });
   });
-})();
+});

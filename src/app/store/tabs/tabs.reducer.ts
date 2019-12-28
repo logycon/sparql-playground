@@ -1,97 +1,83 @@
-import { TabsActions, TabsActionTypes } from './tabs.actions';
+import { createReducer, on, Action } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { SparqlTab } from 'src/app/models/tabs';
+import * as TabsActions from './tabs.actions';
+
 
 export interface TabsState extends EntityState<SparqlTab> {
-  loading?: boolean;
+  loading: boolean;
   activeTab: SparqlTab;
 }
 
 export const tabsAdapter: EntityAdapter<SparqlTab> = createEntityAdapter<SparqlTab>();
 
-export const initialTabsState = tabsAdapter.getInitialState({
+export const tabsInitialState = tabsAdapter.getInitialState({
   loading: false, activeTab: null
 });
 
-export function reducer(state = initialTabsState, action: TabsActions): TabsState {
-  switch (action.type) {
-    case TabsActionTypes.InitTabs: {
-      return {
-        ...state,
-      };
-    }
+const tabsReducer = createReducer(
+  tabsInitialState,
 
-    case TabsActionTypes.AddTab: {
-      const tab = new SparqlTab(`SPARQL ${state.ids.length + 1}`);
-      return tabsAdapter.addOne(
-        tab,
-        {
-          ...state,
-          loading: false,
-          activeTab: tab
-        }
-      );
-    }
+  on(TabsActions.InitTabs, ( state ) => {
+    return { ...state } ;
+  }),
 
-    case TabsActionTypes.SetActiveTab: {
-      return {
-        ...state,
-        activeTab: action.tab
-      };
-    }
+  on(TabsActions.AddTab, ( state ) => {
+    const tab = new SparqlTab();
+    return tabsAdapter.addOne( tab, { ...state, loading: false, activeTab: tab });
+  }),
 
-    case TabsActionTypes.RemoveTab: {
-      const tabIndex: number = (state.ids as Array<string>).indexOf(action.tab.id);
-      let newActiveTab = null;
-      if (tabIndex === 0) {
-        newActiveTab =  state.entities[state.ids[1]];
-      } else {
-        newActiveTab = state.entities[state.ids[0]];
-      }
+  on(TabsActions.LoadTabs, (state, { tabs }) => {
+    return tabsAdapter.addMany(tabs, { ...state, loading: false, activeTab: tabs[0] });
+  }),
 
-      return tabsAdapter.removeOne(
-        action.tab.id,
-        {
-          ...state,
-          activeTab: newActiveTab
-        }
-      );
-    }
+  on(TabsActions.SetActiveTab, (state, { tab }) => {
+    return {  ...state, activeTab: tab };
+  }),
 
-    case TabsActionTypes.ExecuteQuery: {
-      return {
-        ...state,
-        loading: true,
-        activeTab: null
-      };
-    }
+  on(TabsActions.DuplicateTab, (state, { tab }) => {
+    const newTab = SparqlTab.duplicate(tab);
+    return tabsAdapter.upsertOne(newTab, { ...state, activeTab: newTab });
+  }),
 
-    case TabsActionTypes.UpdateTab: {
-      return tabsAdapter.upsertOne(
-        action.tab,
-        {
-          ...state,
-          loading: false,
-          activeTab: action.tab
-        }
-      );
+  on(TabsActions.RemoveTab, (state, { tab }) => {
+    const removeIndex = (state.ids as Array<string>).indexOf(tab.id);
+    const removeTab = state.entities[tab.id];
+    const currentActiveTab = state.activeTab;
+    let newActiveTab;
+    if (removeTab.id === currentActiveTab.id) {
+      const newActiveIndex = removeIndex === 0 ? removeIndex : removeIndex - 1;
+      newActiveTab = { ...state.entities[state.ids[newActiveIndex]] };
+    } else {
+      newActiveTab = currentActiveTab;
     }
+    return tabsAdapter.removeOne( removeTab.id, { ...state, activeTab: newActiveTab });
+  }),
 
-    case TabsActionTypes.SaveTab: {
-      return tabsAdapter.upsertOne(
-        action.tab,
-        state
-      );
-    }
+  on(TabsActions.ExecuteQuery, (state, { tab }) => {
+    return {  ...state, loading: true, activeTab: null };
+  }),
 
-    case TabsActionTypes.LogHistory: {
-      return {
-        ...state
-      };
-    }
+  on(TabsActions.UpdateTab, (state, { tab }) => {
+    return tabsAdapter.upsertOne(tab, { ...state, loading: false, activeTab: tab });
+  }),
 
-    default: {
-      return state;
-    }
-  }
+  on(TabsActions.SaveTab, (state, { tab }) => {
+    return tabsAdapter.upsertOne(tab, state);
+  }),
+
+  on(TabsActions.SaveToLocalStorage, (state) => {
+    return { ...state };
+  }),
+
+  on(TabsActions.LogHistory, (state, { tab }) => {
+    return { ...state };
+  })
+);
+
+export function reducer(state: TabsState | undefined, action: Action) {
+  return tabsReducer(state, action);
 }
+
+
+

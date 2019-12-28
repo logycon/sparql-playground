@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from './store/reducers';
+import { AppState } from './store/store';
 import { InitTabs } from './store/tabs/tabs.actions';
 
 @Component({
@@ -11,9 +11,7 @@ import { InitTabs } from './store/tabs/tabs.actions';
 export class AppComponent {
   title = 'sparql-playground';
 
-  constructor(
-    private store: Store<AppState>
-  ) {
-    this.store.dispatch(new InitTabs());
+  constructor(private store: Store<AppState>) {
+    this.store.dispatch(InitTabs());
   }
 }
