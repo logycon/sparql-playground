@@ -34,6 +34,7 @@ export class SparqlTab extends Tab {
   public queryResultStr: string;
   public queryError: any;
   public history: QueryHistory[];
+  public queryResultType: string;
 
   public constructor() {
     super();

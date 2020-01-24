@@ -21,7 +21,7 @@ export const RemoveTab = createAction(
 
 export const ExecuteQuery = createAction(
   '[TABS] Execute Query',
-  props<{ tab: SparqlTab }>()
+  props<{ tab: SparqlTab, accept: string }>()
 );
 
 export const LogHistory = createAction(
