@@ -84,6 +84,7 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.activeTab = tab;
         this.changeDetector.detectChanges();
+        console.log('tab', this.activeTab);
         if (this.activeTab.query && this.queryEditor) {
           this.queryEditor.setValue(this.activeTab.query);
         }
