@@ -2,7 +2,13 @@
   <div class="toolbar">
     <button *ngIf="false" class="button">btn</button>
     <div class="toolbar-input">
+      <label class="input-label">SPARQL Endpoint URL:</label>
       <input class="input" [(ngModel)]="activeTab.endpoint" placeholder="Enter SPARQL Endpoint">
+      <label class="input-label">Response Format: </label>
+      <select class="input" [(ngModel)]="accept">
+        <option *ngFor="let accept of acceptOptions"
+          [value]="accept.value">{{accept.text}}</option>
+      </select>
     </div>
   </div>
 
@@ -21,7 +27,7 @@
                 <div class="query-history-item-status"
                   [ngClass]="{'success': !query.queryError, 'error' : query.queryError}">
                 </div>
-                <div class="query-history-item-query"> {{query.query}}</div>
+                <div class="query-history-item-query" (click)="repeatQuery(query.query)"> {{query.query}}</div>
               </div>
             </div>
           </as-split-area>

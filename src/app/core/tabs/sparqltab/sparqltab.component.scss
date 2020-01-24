@@ -137,6 +137,13 @@
   flex: 1 1 0%;
 }
 
+.input-label {
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 0.8em;
+}
+
 .input:focus {
   color: $white;
   outline: none;
@@ -181,7 +188,7 @@ $type-colors: (
 }
 
 .query-history-item-status {
-  width: 20px;
+  min-width: 20px;
   height: 20px;
   border-radius: 10px;
   padding: 3px 5px 3px 5px;
@@ -197,7 +204,8 @@ $type-colors: (
 
 .query-history-item-query {
   padding-left: 10px;
-
+  cursor: pointer;
+  cursor: hand;
 }
 
 ::ng-deep #codemirroResult {

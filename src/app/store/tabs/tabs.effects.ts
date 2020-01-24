@@ -36,7 +36,7 @@ export class TabsEffects {
   executeQuery$ = createEffect(() => this.actions$.pipe(
       ofType(TabsActions.ExecuteQuery),
       mergeMap((action) => {
-        return this.sparqlService.executeSparql(action.tab.endpoint, action.tab.query).pipe(
+        return this.sparqlService.executeSparql(action.tab.endpoint, action.tab.query, action.accept).pipe(
           map((res: any) => {
             if (action.tab.query.startsWith('#')) {
               const title = action.tab.query.split('\n')[0];
@@ -45,8 +45,24 @@ export class TabsEffects {
 
             action.tab.queryResult = res;
             action.tab.queryError = null;
-            action.tab.queryResultStr = JSON.stringify(action.tab.queryResult, null, '\t');
-            action.tab.history.unshift(QueryHistory.fromTab(action.tab));
+
+            function getContentType(val: string) {
+              if (val.startsWith('{')) { return 'javascript'; }
+              if (val.indexOf('"<?xml') >= 0) { return 'application/xml'; }
+              return 'text/plain';
+            }
+
+            action.tab.queryResultType = getContentType(JSON.stringify(action.tab.queryResult));
+            if (action.tab.queryResultType === 'javascript') {
+              action.tab.queryResultStr = JSON.stringify(action.tab.queryResult, null, '\t');
+            } else {
+              action.tab.queryResultStr = action.tab.queryResult;
+            }
+
+            const sameQuery = action.tab.history[0]
+            if (sameQuery && sameQuery.query !== action.tab.query) {
+              action.tab.history.unshift(QueryHistory.fromTab(action.tab));
+            }
             return TabsActions.UpdateTab({ tab: action.tab });
           }),
           catchError(err => {

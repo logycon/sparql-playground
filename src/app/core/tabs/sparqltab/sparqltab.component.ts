@@ -37,6 +37,18 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
   activeTab$: Observable<SparqlTab>;
   activeTab: SparqlTab;
   warning: Warning;
+  acceptOptions = [
+    { text: 'SELECT: application/json', value: 'application/json'},
+    { text: 'SELECT: text/tab-separated-values', value: 'text/tab-separated-values'},
+    { text: 'SELECT text/csv', value: 'text/csv' },
+    { text: 'CONSTRUCT: application/rdf+xml', value: 'application/rdf+xml'},
+    { text: 'CONSTRUCT: application/x-turtle', value: 'application/x-turtle'},
+    { text: 'CONSTRUCT: application/ntriples', value: 'application/ntriples'},
+    { text: 'CONSTRUCT: application/ld+json', value: 'application/ld+json'},
+    { text: 'CONSTRUCT: text/rdf+n3', value: 'text/rdf+n3'}
+  ];
+  accept = this.acceptOptions[0].value;
+
 
   queryEditorOptions = {
     lineNumbers: true,
@@ -76,6 +88,7 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
           this.queryEditor.setValue(this.activeTab.query);
         }
         if (this.activeTab.queryResult && this.resultsEditor) {
+          this.resultsEditor.setOption('mode', this.activeTab.queryResultType);
           this.resultsEditor.setValue(this.activeTab.queryResultStr);
         }
       }
@@ -129,7 +142,7 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private executeQuery() {
     this.activeTab.query = this.queryEditor.getValue();
-    this.store.dispatch(TabsActions.ExecuteQuery({tab: this.activeTab}));
+    this.store.dispatch(TabsActions.ExecuteQuery({tab: this.activeTab, accept: this.accept}));
   }
 
   warned(proceed: boolean) {
@@ -138,4 +151,7 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  repeatQuery(sql: string) {
+    this.queryEditor.setValue(sql);
+  }
 }

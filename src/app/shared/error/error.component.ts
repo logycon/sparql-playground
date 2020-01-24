@@ -20,8 +20,8 @@ export class ErrorComponent {
     return this.err;
   }
 
-  public action: string;
   public visible: boolean;
+  public action: string;
 
   constructor() {
     this.visible = true;
@@ -29,11 +29,8 @@ export class ErrorComponent {
   }
 
   public getErrorDetail() {
-    console.log(this.error);
-    if (this.error instanceof HttpErrorResponse) {
-      return `${this.error.error.message || this.error.message}`;
-    }
-    return '';
+    const msg = this.error.message || this.error.error.message;
+    return `${msg}`;
   }
 
   hide() {
