@@ -1,7 +1,7 @@
 {
   "name": "sparql-playground",
   "version": "0.0.2",
-  "scrinpts": {
+  "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
