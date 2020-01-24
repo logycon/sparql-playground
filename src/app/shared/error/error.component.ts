@@ -12,6 +12,7 @@ export class ErrorComponent {
 
   @Input()
   set error(val: any) {
+    console.log('setError', val);
     this.visible = true;
     this.err = val;
     BrowserUtils.addBackdrop();
@@ -29,7 +30,7 @@ export class ErrorComponent {
   }
 
   public getErrorDetail() {
-    const msg = this.error.message || this.error.error.message;
+    const msg = (this.error.error.message) ? this.error.error.message : this.error.message;
     return `${msg}`;
   }
 

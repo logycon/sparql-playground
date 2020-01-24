@@ -19,7 +19,7 @@ export class SparqlService {
     }
     return this.http.post(endpoint, payload, options).pipe(
       mergeMap((res) => of(res)),
-      catchError((err: HttpErrorResponse) => throwError(err.error))
+      catchError((err: HttpErrorResponse) => of(err))
     );
   }
 

@@ -90,6 +90,12 @@ export class SparqlTabComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.activeTab.queryResult && this.resultsEditor) {
           this.resultsEditor.setOption('mode', this.activeTab.queryResultType);
           this.resultsEditor.setValue(this.activeTab.queryResultStr);
+        } else {
+          if (this.activeTab.queryError) {
+            console.log('error', this.activeTab.queryError);
+            this.resultsEditor.setValue(this.activeTab.queryError.error || this.activeTab.queryError.message);
+            this.resultsEditor.setOption('mode', 'text/plain');
+          }
         }
       }
     });

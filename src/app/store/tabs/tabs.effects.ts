@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { QueryHistory } from 'src/app/models/tabs';
 import { LocalStorageService } from 'src/app/services/localstorage.service';
 import * as TabsActions from './tabs.actions';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable()
@@ -43,29 +44,38 @@ export class TabsEffects {
               action.tab.title = title.substr(1, title.length);
             }
 
-            action.tab.queryResult = res;
-            action.tab.queryError = null;
+            if (res instanceof HttpErrorResponse) {
+              action.tab.queryResult = null;
+              action.tab.queryError = res;
+              action.tab.queryResultType = 'text';
 
-            function getContentType(val: string) {
-              if (val.startsWith('{')) { return 'javascript'; }
-              if (val.indexOf('"<?xml') >= 0) { return 'application/xml'; }
-              return 'text/plain';
-            }
-
-            action.tab.queryResultType = getContentType(JSON.stringify(action.tab.queryResult));
-            if (action.tab.queryResultType === 'javascript') {
-              action.tab.queryResultStr = JSON.stringify(action.tab.queryResult, null, '\t');
             } else {
-              action.tab.queryResultStr = action.tab.queryResult;
+              action.tab.queryResult = res;
+              action.tab.queryError = null;
+
+              function getContentType(val: string) {
+                if (val.startsWith('{')) { return 'javascript'; }
+                if (val.indexOf('"<?xml') >= 0) { return 'application/xml'; }
+                return 'text/plain';
+              }
+
+              action.tab.queryResultType = getContentType(JSON.stringify(action.tab.queryResult));
+              if (action.tab.queryResultType === 'javascript') {
+                action.tab.queryResultStr = JSON.stringify(action.tab.queryResult, null, '\t');
+              } else {
+                action.tab.queryResultStr = action.tab.queryResult;
+              }
+
+              const sameQuery = action.tab.history[0]
+              if (sameQuery && sameQuery.query !== action.tab.query) {
+                action.tab.history.unshift(QueryHistory.fromTab(action.tab));
+              }
             }
 
-            const sameQuery = action.tab.history[0]
-            if (sameQuery && sameQuery.query !== action.tab.query) {
-              action.tab.history.unshift(QueryHistory.fromTab(action.tab));
-            }
             return TabsActions.UpdateTab({ tab: action.tab });
           }),
           catchError(err => {
+            console.log('error caught', err);
             action.tab.queryResult = null;
             action.tab.queryError = err;
             action.tab.queryResultStr = '';

@@ -35,10 +35,10 @@
       </as-split-area>
 
       <as-split-area class="right" size="60">
-        <app-error *ngIf="activeTab.queryError" [error]="activeTab.queryError"></app-error>
+        <app-error *ngIf="false && activeTab.queryError" [error]="activeTab.queryError"></app-error>
         <app-warning *ngIf="warning" [warning]="warning" (close)="warned($event)"></app-warning>
         <div class="results">
-          <div class="scrollable resultView" [hidden]="!activeTab.queryResult">
+          <div class="scrollable resultView" [hidden]="!(activeTab.queryResult || activeTab.queryError)">
             <textarea class="scrollable" #results></textarea>
           </div>
         </div>
