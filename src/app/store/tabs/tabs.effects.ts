@@ -66,8 +66,8 @@ export class TabsEffects {
                 action.tab.queryResultStr = action.tab.queryResult;
               }
 
-              const sameQuery = action.tab.history[0]
-              if (sameQuery && sameQuery.query !== action.tab.query) {
+              const sameQuery = action.tab.history[0];
+              if (!sameQuery || sameQuery.query !== action.tab.query) {
                 action.tab.history.unshift(QueryHistory.fromTab(action.tab));
               }
             }
