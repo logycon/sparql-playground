@@ -28,7 +28,7 @@
     "angular-split": "^3.0.1",
     "codemirror": "^5.47.0",
     "core-js": "^2.5.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "rxjs": "~6.5.4",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
